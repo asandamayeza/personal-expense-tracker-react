@@ -9,9 +9,9 @@ import { useNavigate } from "react-router";
 import "./home.css";
 
 export default function Home() {
-  const { name, profilePhoto, userID, isAuth } = useGetUserInfo();
-  const { transactions, transactionTotals } = useGetTransactions();
-  const { addTransaction } = useAddTransaction();
+  const { name, profilePhoto, userID, isAuth } = useGetUserInfo(); // will pull users details from the custom hook
+  const { transactions, transactionTotals } = useGetTransactions(); // will fetch all transactions and calculate totals
+  const { addTransaction } = useAddTransaction(); //gets the function to add a transaction
   const navigate = useNavigate();
 
   const [description, setDescription] = useState("");
@@ -19,30 +19,30 @@ export default function Home() {
   const [transactionType, setTransactionType] = useState("expense");
   const [loadingAuth, setLoadingAuth] = useState(true);
 
-  const { balance, income, expenses } = transactionTotals;
+  const { balance, income, expenses } = transactionTotals; //will deconstruct the total values to be displayed
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
+      //checks if our user is logged in
       if (!user) {
         console.log("Home: user not logged in, redirect");
-        navigate("/");
+        navigate("/");//if not, then will redirect to the login page
       } else {
         console.log("Home: user is:", user.uid);
-        setLoadingAuth(false);
+        setLoadingAuth(false); //removes loading to show the content
       }
     });
     return () => unsub();
   }, [navigate]);
 
   const onSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); //prevents the default page reload
     console.log("Home onSubmit", { userID, description, transactionAmount, transactionType });
     addTransaction({ description, transactionAmount, transactionType });
-    setDescription("");
+    setDescription(""); //clears the form input
     setTransactionAmount("");
   };
 
-  // New function to delete a transaction by its ID
   const handleDelete = async (transactionId) => {
     try {
       const transactionRef = ref(db, `transactions/${transactionId}`);
@@ -53,7 +53,7 @@ export default function Home() {
     }
   };
 
-  if (loadingAuth) {
+  if (loadingAuth) { //will wait for firebase to determine if the user is logged in 
     return <div>Loading...</div>;
   }
 
