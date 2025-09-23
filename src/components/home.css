@@ -3,13 +3,17 @@
 body {
     background-color: #f7fbf8; 
     color: #34495e; 
+    background-image: '/public/images.png';
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
   }
   
   .expense-tracker {
     max-width: 800px; 
     margin: 0 auto; 
-    padding: 3rem;
-    background-color: #ffffff;
+    padding: 20px;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
     display: flex;
@@ -156,4 +160,15 @@ body {
     color: #34495e;
     margin-bottom: 1rem;
   }
+  .transaction-item {
+    border-bottom: 1px solid #ccc;   
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+  }
   
+  .transaction-item:last-child {
+    border-bottom: none;   
+  }
+  
+  
+   

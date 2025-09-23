@@ -1,67 +1,81 @@
+// hooks/useGetTransactions.js
+
 import { useEffect, useState } from "react";
-import {
-  query,
-  ref,
-  orderByChild,
-  equalTo,
-  onValue,
-} from "firebase/database";
+import { ref, onValue } from "firebase/database";
 import { db } from "../firebase";
 import { useGetUserInfo } from "./useGetUserInfo";
 
 export const useGetTransactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [transactionTotals, setTransactionTotals] = useState({
-    balance: 0.0,
-    income: 0.0,
-    expenses: 0.0,
+    balance: 0,
+    income: 0,
+    expenses: 0,
   });
-  
+
   const { userID } = useGetUserInfo();
 
   useEffect(() => {
-    if (!userID) return; // Prevent fetching if userID is not yet available
+    console.log("useGetTransactions: userID = ", userID);
+    if (!userID) {
+      console.log("useGetTransactions: waiting for userID");
+      return;
+    }
 
-    const transactionCollectionRef = ref(db, "transactions");
-    const userTransactionsQuery = query(
-      transactionCollectionRef,
-      orderByChild("userID"),
-      equalTo(userID)
-    );
+    const transactionsRef = ref(db, "transactions");
+    const listener = onValue(transactionsRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("useGetTransactions: snapshot data:", data);
 
-    const unsubscribe = onValue(userTransactionsQuery, (snapshot) => {
-      const transactionList = [];
-      let totalIncome = 0;
-      let totalExpenses = 0;
-      
-      if (snapshot.exists()) {
-        snapshot.forEach((childSnapshot) => {
-          const data = childSnapshot.val();
-          const id = childSnapshot.key;
-  
-          transactionList.push({ ...data, id });
-          
-          if (data.transactionType === "expense") {
-            totalExpenses += Number(data.transactionAmount);
-          } else {
-            totalIncome += Number(data.transactionAmount);
+      const tList = [];
+      let incomeSum = 0;
+      let expenseSum = 0;
+
+      if (data) {
+        Object.entries(data).forEach(([key, txn]) => {
+          console.log("Checking txn:", key, txn);
+
+          if (txn && txn.userID === userID) {
+            console.log("Matches userID:", key);
+
+            const amount = parseFloat(txn.transactionAmount) || 0;
+            tList.push({
+              id: key,
+              description: txn.description,
+              transactionType: txn.transactionType,
+              transactionAmount: amount,
+              createdAt: txn.createdAt,
+            });
+
+            if (txn.transactionType === "expense") {
+              expenseSum += amount;
+            } else {
+              incomeSum += amount;
+            }
           }
         });
+      } else {
+        console.log("No transactions data at path");
       }
-      
-      setTransactions(transactionList);
 
-      const balance = totalIncome - totalExpenses;
+      const balance = incomeSum - expenseSum;
+      console.log("Computed totals:", { incomeSum, expenseSum, balance });
+
+      setTransactions(tList);
       setTransactionTotals({
         balance,
-        expenses: totalExpenses,
-        income: totalIncome,
+        income: incomeSum,
+        expenses: expenseSum,
       });
+    }, (error) => {
+      console.error("useGetTransactions error:", error);
     });
 
-    // Cleanup the listener when the component unmounts or userID changes
-    return () => unsubscribe();
-  }, [userID]); 
+    return () => {
+      listener(); // unsubscribe
+    };
+  }, [userID]);
 
   return { transactions, transactionTotals };
-}
+};
+

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    createUserWithEmailAndPassword, //register function implemented
-    GoogleAuthProvider,
-    signInWithPopup,
+    signInWithEmailAndPassword, //logging in our users
+    onAuthStateChanged, //for tracking the user login state
+    createUserWithEmailAndPassword, // for registering new users
+    GoogleAuthProvider, //for google login
+    signInWithPopup, //for google login popup
 } from "firebase/auth";
 import { auth } from "../firebase.js"
 import { Link } from "react-router-dom";
@@ -17,8 +17,11 @@ import { useNavigate } from "react-router-dom";
 
 
 export default function Welcome() {
+    //for login
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    //showing registration form instead of login form
     const [isRegistering, setIsRegistering] = useState(false); //creating account
     const [registerInformation, setRegisterInformation] = useState({
         email: "",
@@ -26,8 +29,9 @@ export default function Welcome() {
         password: "",
         confirmPassword: ""
     });
+
     const navigate = useNavigate();
-    const provider = new GoogleAuthProvider();
+    const provider = new GoogleAuthProvider();//initialize google login provider
 
 
 
@@ -42,25 +46,35 @@ export default function Welcome() {
 
 
     const handleEmailChange = (e) => {
-        setEmail(e.target.value);
+        setEmail(e.target.value); //update email input
     };
 
     const handlePasswordChange = (e) => {
-        setPassword(e.target.value);
+        setPassword(e.target.value); //update password input
     };
 
     const handleSignIn = () => {
+        //firebase function to sign in using email and password
         signInWithEmailAndPassword(auth, email, password)
-            .then(() => {//if the sign in is correct we will then be directed/navigated to homepage
-                navigate("/home");
-            })
-            .catch((err) => alert(err.message)); //if the user gets an error it will alert the user
-    };
+          .then((userCredential) => {
+            const user = userCredential.user;
+            const authInfo = {
+              userID: user.uid,
+              email: user.email,
+              name: user.email.split("@")[0], //for fake user email, use word before @ for user name
+              profilePhoto: user.photoURL || null, //no photo for fake users
+              isAuth: true,
+            };
+            localStorage.setItem("auth", JSON.stringify(authInfo));
+            navigate("/home");
+          })
+          .catch((err) => alert(err.message));
+      };
 
 
    
     provider.setCustomParameters({
-      prompt: 'select_account'
+      prompt: 'select_account' //asking users to choose account
     });
     
 
@@ -73,6 +87,7 @@ export default function Welcome() {
                 profilePhoto: results.user.photoURL,
                 isAuth: true,
             };
+            //saving google users info to localStorage
             localStorage.setItem("auth", JSON.stringify(authInfo));
             navigate("/home");
         }
@@ -85,25 +100,41 @@ export default function Welcome() {
 
 
     const handleRegister = () => {
+        //validating email match
         if (registerInformation.email !== registerInformation.confirmEmail) {
-            alert("Please confirm that email are the same");
-            return;
-        } else if (
-            registerInformation.password !== registerInformation.confirmPassword
-        ) {
-            alert("Please confirm that password are the same");
-            return;
+          alert("Please confirm that emails are the same");
+          return;
         }
-        createUserWithEmailAndPassword( //final created account, if handle register is a success
-            auth,
-            registerInformation.email,
-            registerInformation.password
+        //validating password match
+         else if (
+          registerInformation.password !== registerInformation.confirmPassword
+        ) {
+          alert("Please confirm that passwords are the same");
+          return;
+        }
+        //registering user using firebase
+        createUserWithEmailAndPassword(
+          auth,
+          registerInformation.email,
+          registerInformation.password
         )
-            .then(() => {
-                navigate("/home");
-            })
-            .catch((err) => alert(err.message));
-    };
+          .then((userCredential) => {
+            const user = userCredential.user;
+            const authInfo = {
+              userID: user.uid, 
+              email: user.email,
+              name: user.email.split("@")[0], //fake users email
+              profilePhoto: user.photoURL || null,
+              isAuth: true,
+            };
+            //saved to local storage 
+            localStorage.setItem("auth", JSON.stringify(authInfo));
+            navigate("/home");
+          })
+          .catch((err) => alert(err.message));
+      };
+
+    
 
     return (
         <div className="welcome">

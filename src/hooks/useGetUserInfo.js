@@ -1,6 +1,20 @@
 export const useGetUserInfo = () => {
-    const { name, profilePhoto, userID, isAuth } =
-      JSON.parse(localStorage.getItem("auth")) || {};
-  
-    return { name, profilePhoto, userID, isAuth };
-  }; //get info from the local storage since its in json back into an object
+  const storedAuth = JSON.parse(localStorage.getItem("auth")) || {};
+
+  let name = storedAuth.name;
+  const profilePhoto = storedAuth.profilePhoto || null;
+  const userID = storedAuth.userID || null;
+  const isAuth = storedAuth.isAuth || false;
+
+  // for the fake user 
+  if (!name && storedAuth.email) {
+    name = storedAuth.email.split("@")[0]; // use part before @ in email as name
+  }
+
+  // Extra fallback
+  if (!name) {
+    name = "User";
+  }
+
+  return { name, profilePhoto, userID, isAuth };
+};

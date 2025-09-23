@@ -1,65 +1,78 @@
 import React, { useState, useEffect } from "react";
-import { signOut } from 'firebase/auth';
+import { signOut, onAuthStateChanged } from "firebase/auth";
 import { useAddTransaction } from "../hooks/useAddTransaction.js";
-import { useGetTransactions } from "../hooks/useGetTransactions";
-import { useGetUserInfo } from "../hooks/useGetUserInfo";
-import { auth, db } from "../firebase.js"
+import { useGetTransactions } from "../hooks/useGetTransactions.js";
+import { useGetUserInfo } from "../hooks/useGetUserInfo.js";
+import { auth, db } from "../firebase.js"; // Added db import
+import { ref, remove } from "firebase/database"; // Import remove to delete transaction
 import { useNavigate } from "react-router";
-import "./home.css"
+import "./home.css";
 
 export default function Home() {
-    const { addTransaction } = useAddTransaction();
-    const { transactions, transactionTotals } = useGetTransactions();
-    const { name, profilePhoto } = useGetUserInfo();
-    console.log("Profile Photo", profilePhoto);
-    const navigate = useNavigate();
-  
-    const [description, setDescription] = useState("");
-    const [transactionAmount, setTransactionAmount] = useState(0);
-    const [transactionType, setTransactionType] = useState("expense");
-  
-    const { balance, income, expenses } = transactionTotals;
-  
-    const onSubmit = (e) => {
-      e.preventDefault();
-      addTransaction({
-        description,
-        transactionAmount,
-        transactionType,
-      });
-  
-      setDescription("");
-      setTransactionAmount("");
-    };
-  
-    const signUserOut = async () => {
-      try {
-        await signOut(auth);
-        localStorage.clear();
+  const { name, profilePhoto, userID, isAuth } = useGetUserInfo();
+  const { transactions, transactionTotals } = useGetTransactions();
+  const { addTransaction } = useAddTransaction();
+  const navigate = useNavigate();
+
+  const [description, setDescription] = useState("");
+  const [transactionAmount, setTransactionAmount] = useState("");
+  const [transactionType, setTransactionType] = useState("expense");
+  const [loadingAuth, setLoadingAuth] = useState(true);
+
+  const { balance, income, expenses } = transactionTotals;
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        console.log("Home: user not logged in, redirect");
         navigate("/");
-      } catch (err) {
-        console.error(err);
+      } else {
+        console.log("Home: user is:", user.uid);
+        setLoadingAuth(false);
       }
-    };
-  
+    });
+    return () => unsub();
+  }, [navigate]);
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log("Home onSubmit", { userID, description, transactionAmount, transactionType });
+    addTransaction({ description, transactionAmount, transactionType });
+    setDescription("");
+    setTransactionAmount("");
+  };
 
-    return (
-        <> 
-        <div className="expense-tracker">
+  // New function to delete a transaction by its ID
+  const handleDelete = async (transactionId) => {
+    try {
+      const transactionRef = ref(db, `transactions/${transactionId}`);
+      await remove(transactionRef);
+      console.log("Deleted transaction with ID:", transactionId);
+    } catch (error) {
+      console.error("Error deleting transaction:", error);
+    }
+  };
+
+  if (loadingAuth) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <>
+      <div className="expense-tracker">
         <div className="container">
-          <h1> {name}'s Expense Tracker</h1>
+          <h1>{name ? `${name}'s` : "Your"} Expense Tracker</h1>
           <div className="balance">
-            <h3> Your Balance</h3> 
-            {balance >= 0 ? <h2> R{balance}</h2> : <h2> -R{balance * -1}</h2>} 
+            <h3>Your Balance</h3>
+            {balance >= 0 ? <h2>R{balance}</h2> : <h2>-R{Math.abs(balance)}</h2>}
           </div>
           <div className="summary">
             <div className="income">
-              <h4> Income</h4>
+              <h4>Income</h4>
               <p>R{income}</p>
             </div>
             <div className="expenses">
-              <h4> Expenses</h4>
+              <h4>Expenses</h4>
               <p>R{expenses}</p>
             </div>
           </div>
@@ -78,68 +91,83 @@ export default function Home() {
               required
               onChange={(e) => setTransactionAmount(e.target.value)}
             />
-            <input
-              type="radio"
-              id="expense"
-              value="expense"
-              checked={transactionType === "expense"}
-              onChange={(e) => setTransactionType(e.target.value)}
-            />
-            <label htmlFor="expense"> Expense</label>
-            <input
-              type="radio"
-              id="income"
-              value="income"
-              checked={transactionType === "income"}
-              onChange={(e) => setTransactionType(e.target.value)}
-            />
-            <label htmlFor="income"> Income</label>
-
-            <button type="submit"> Add Transaction</button>
+            <div className="radio-group">
+              <label>
+                <input
+                  type="radio"
+                  value="expense"
+                  checked={transactionType === "expense"}
+                  onChange={(e) => setTransactionType(e.target.value)}
+                />
+                Expense
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="income"
+                  checked={transactionType === "income"}
+                  onChange={(e) => setTransactionType(e.target.value)}
+                />
+                Income
+              </label>
+            </div>
+            <button type="submit">Add Transaction</button>
           </form>
         </div>
-        {profilePhoto && (
-            <div className="full-width-container">
-                 <div className="profile">
-            {" "}
-            <img className="profile-photo" src={profilePhoto} referrerPolicy="no-referrer" alt="Profile" />
-            <button className="sign-out-button" onClick={signUserOut}>
+        <div className="full-width-container">
+          <div className="profile">
+            {profilePhoto && (
+              <img
+                className="profile-photo"
+                src={profilePhoto}
+                referrerPolicy="no-referrer"
+                alt="Profile"
+              />
+            )}
+            <button
+              className="sign-out-button"
+              onClick={async () => {
+                await signOut(auth);
+                localStorage.clear();
+                navigate("/");
+              }}
+            >
               Sign Out
             </button>
           </div>
-          </div>
-         
-        )}
-       
+        </div>
       </div>
+
       <div className="transactions">
-        <h3> Transactions</h3>
-        <ul>
-          {transactions.map((transaction) => {
-            const { description, transactionAmount, transactionType } =
-              transaction;
-            return (
-              <li>
-                <h4> {description} </h4>
-                <p>
-                  R{transactionAmount} •{" "}
-                  <label
+        <h3>Transactions</h3>
+        {transactions.length === 0 ? (
+          <p>No transactions found</p>
+        ) : (
+          <ul>
+            {transactions.map((txn) => {
+              return (
+                <li key={txn.id} className="transaction-item">
+                  <h4>{txn.description}</h4>
+                  <p
                     style={{
-                      color: transactionType === "expense" ? "red" : "green",
+                      color: txn.transactionType === "expense" ? "red" : "green",
                     }}
                   >
-                    {" "}
-                    {transactionType}{" "}
-                  </label>
-                </p>
-              </li>
-            );
-          })}
-        </ul>
-        
-        </div>
+                    R{txn.transactionAmount} • {txn.transactionType}
+                  </p>
+                  <button
+                    className="delete-transaction-button"
+                    onClick={() => handleDelete(txn.id)}
+                  >
+                    Delete
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
 
-        </>
-    );
-};
-
+        )}
+      </div>
+    </>
+  );
+}
