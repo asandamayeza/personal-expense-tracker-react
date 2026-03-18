@@ -2,17 +2,6 @@ import React, { useMemo } from "react";
 import { useGetTransactions } from "../hooks/useGetTransactions.js";
 import "./analytics.css";
 
-const CATEGORY_COLORS = {
-  "Food":          "#e67e22",
-  "Transport":     "#3b82f6",
-  "Housing":       "#8b5cf6",
-  "Health":        "#ec4899",
-  "Entertainment": "#f59e0b",
-  "Salary":        "#4caf7d",
-  "Savings":       "#c9a84c",
-  "General":       "#6b7280",
-  "Other":         "#9ca3af",
-};
 
 function fmt(n) {
   return "R " + Math.abs(Number(n)).toLocaleString("en-ZA", {

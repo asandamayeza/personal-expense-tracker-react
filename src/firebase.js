@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import {getDatabase} from "firebase/database";
-import {getAuth, GoogleAuthProvider} from "firebase/auth"; //get authen, then get google authen
+import {getAuth} from "firebase/auth"; //get authen, then get google authen
 
 
 

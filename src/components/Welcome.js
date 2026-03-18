@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {
   signInWithEmailAndPassword, //logging in our users
-  onAuthStateChanged, //for tracking the user login state
   createUserWithEmailAndPassword, //for registering new users 
   GoogleAuthProvider, //for google login
   signInWithPopup, //for google login popup
 } from "firebase/auth";
 import { auth } from "../firebase.js";
-import { Link } from "react-router-dom";
 import "./welcome.css";
 import GoogleButton from "react-google-button";
 import { useNavigate } from "react-router-dom";
@@ -36,7 +34,7 @@ export default function Welcome() {
     auth.onAuthStateChanged((user) => {
       if (user) navigate("/home");
     });
-  }, []);
+  }, [navigate]);
 
   provider.setCustomParameters({ prompt: "select_account" }); //asking user to choose accounf
 
