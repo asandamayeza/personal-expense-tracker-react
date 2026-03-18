@@ -1,6 +1,10 @@
 import './App.css';
 import Welcome from './components/Welcome';
 import Home from './components/Home';
+import Transactions from './components/Transactions';
+import Analytics from './components/Analytics';
+import Profile from './components/Profile';
+
 
 
 import {
@@ -14,16 +18,26 @@ function App() {
 
   return (
     <div className="App">
-    <Router>
+      <Router>
         <Routes>
-          <Route path="/" element={<Welcome/>} /> 
+          <Route path="/" element={<Welcome />} />
+
+          <Route path="/home" element={<Home />} />
+
+          <Route path="/transactions" element={<Transactions />} />
+
+          <Route path="/analytics" element={<Analytics />} />
+
+
+          <Route path="/profile" element={<Profile />} />
+
           
-          <Route path="/home" element={<Home/>} />
-          
-         
-          
+
+
+
+
         </Routes>
-    </Router>
+      </Router>
 
     </div>
   );

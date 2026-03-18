@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Outfit:wght@300;400;500;600&display=swap');
+
+:root {
+  --gold:#c9a84c; --gold-light:#e8c97a; --gold-pale:rgba(201,168,76,0.10);
+  --dark:#0a0c0f; --dark2:#0f1217; --dark3:#161a21; --dark4:#1c2028;
+  --surface:rgba(255,255,255,0.04); --surface2:rgba(255,255,255,0.07);
+  --border:rgba(201,168,76,0.18); --border-subtle:rgba(255,255,255,0.07);
+  --text:#f0ece4; --muted:rgba(240,236,228,0.48);
+  --green:#4caf7d; --green-pale:rgba(76,175,125,0.12);
+  --red:#e05c5c;   --red-pale:rgba(224,92,92,0.12);
+  --radius:16px; --radius-sm:10px;
+}
+
+/* ── PAGE ── */
+.profile-page {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 900px;
+  animation: fadeUp .6s ease both .1s;
+}
+
+/* ── HERO CARD ── */
+.profile-hero {
+  background: var(--dark3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.profile-hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: .5;
+}
+.profile-hero-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 80% 50%, rgba(201,168,76,.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.profile-avatar-wrap { position: relative; flex-shrink: 0; }
+.profile-avatar {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--gold);
+  background: var(--dark4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44px;
+  overflow: hidden;
+}
+.profile-avatar-ring {
+  position: absolute; inset: -5px;
+  border-radius: 50%;
+  border: 2px solid rgba(201,168,76,.3);
+  animation: spin 12s linear infinite;
+  border-top-color: var(--gold);
+  pointer-events: none;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.profile-hero-info { flex: 1; }
+.profile-hero-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 34px; font-weight: 600;
+  margin-bottom: 4px;
+}
+.profile-hero-email { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+.profile-hero-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+.ph-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 13px; border-radius: 99px;
+  font-size: 12px; font-weight: 500;
+}
+.ph-badge.gold { background: var(--gold-pale); color: var(--gold-light); border: 1px solid var(--border); }
+.ph-badge.green { background: var(--green-pale); color: var(--green); }
+
+.profile-hero-actions { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+.btn-signout {
+  padding: 11px 24px;
+  background: var(--red-pale);
+  border: 1.5px solid rgba(224,92,92,.3);
+  border-radius: var(--radius-sm);
+  color: var(--red); font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: 'Outfit', sans-serif;
+  transition: all .2s; display: flex; align-items: center; gap: 8px;
+}
+.btn-signout:hover { background: var(--red); color: #fff; border-color: var(--red); }
+
+/* ── TWO COL ── */
+.profile-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ── SECTION CARD ── */
+.profile-card {
+  background: var(--dark3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+}
+.pc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+.pc-icon { font-size: 20px; }
+.pc-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 600;
+}
+
+/* ── FORM FIELDS ── */
+.pf-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.pf-group:last-of-type { margin-bottom: 0; }
+.pf-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--muted);
+}
+.pf-input, .pf-select {
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 14px; color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.pf-input:focus, .pf-select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,.1);
+}
+.pf-input::placeholder { color: rgba(240,236,228,.22); }
+.pf-input[readonly] { opacity: .6; cursor: not-allowed; }
+
+.pf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.btn-save {
+  width: 100%; padding: 13px;
+  background: linear-gradient(135deg, var(--gold), #a67c2e);
+  color: #0a0c0f; border: none; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  font-family: 'Outfit', sans-serif; letter-spacing: .8px; text-transform: uppercase;
+  transition: opacity .2s, transform .15s; margin-top: 18px;
+}
+.btn-save:hover { opacity: .87; transform: translateY(-1px); }
+
+/* ── STATS SUMMARY ── */
+.profile-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+}
+.ps-item {
+  background: var(--dark4);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px; padding: 16px;
+  text-align: center;
+}
+.ps-icon { font-size: 20px; margin-bottom: 6px; }
+.ps-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 600; color: var(--gold-light);
+}
+.ps-lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* ── SECURITY ── */
+.sec-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0; border-bottom: 1px solid var(--border-subtle);
+}
+.sec-row:last-child { border-bottom: none; padding-bottom: 0; }
+.sec-row-left { display: flex; align-items: center; gap: 12px; }
+.sec-row-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+}
+.sec-row-icon.ok   { background: var(--green-pale); }
+.sec-row-icon.warn { background: var(--gold-pale); }
+.sec-row-icon.red  { background: var(--red-pale); }
+.sec-row-name  { font-size: 13px; font-weight: 500; }
+.sec-row-desc  { font-size: 12px; color: var(--muted); }
+.sec-status {
+  font-size: 11px; font-weight: 600; padding: 4px 10px;
+  border-radius: 99px;
+}
+.sec-status.enabled  { background: var(--green-pale); color: var(--green); }
+.sec-status.disabled { background: var(--gold-pale);  color: var(--gold-light); }
+
+/* ── PREFERENCES ── */
+.pref-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid var(--border-subtle);
+}
+.pref-row:last-child { border-bottom: none; }
+.pref-label { font-size: 13px; font-weight: 500; }
+.pref-desc  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+/* Toggle */
+.toggle {
+  width: 44px; height: 24px;
+  background: var(--dark4); border-radius: 99px;
+  position: relative; cursor: pointer;
+  transition: background .2s; flex-shrink: 0;
+  border: 1.5px solid var(--border-subtle);
+}
+.toggle.on { background: var(--gold); border-color: var(--gold); }
+.toggle::after {
+  content: '';
+  position: absolute; top: 3px; left: 3px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--muted); transition: transform .2s, background .2s;
+}
+.toggle.on::after { transform: translateX(20px); background: #0a0c0f; }
+
+/* ── DANGER ZONE ── */
+.danger-card {
+  background: var(--dark3);
+  border: 1px solid rgba(224,92,92,.2);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+}
+.danger-card .pc-title { color: var(--red); }
+.btn-danger {
+  padding: 11px 22px;
+  background: transparent;
+  border: 1.5px solid rgba(224,92,92,.35);
+  border-radius: var(--radius-sm);
+  color: var(--red); font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: 'Outfit', sans-serif;
+  transition: all .2s;
+}
+.btn-danger:hover { background: var(--red); color: #fff; border-color: var(--red); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+@media (max-width: 768px) {
+  .profile-page { padding: 20px; }
+  .profile-two-col { grid-template-columns: 1fr; }
+  .profile-hero { flex-direction: column; text-align: center; }
+  .profile-hero-actions { align-items: center; }
+  .profile-stats { grid-template-columns: 1fr 1fr; }
+}

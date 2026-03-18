@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Outfit:wght@300;400;500;600&display=swap');
+
+/* Shared shell vars — keep in sync with home.css */
+:root {
+  --gold:#c9a84c; --gold-light:#e8c97a; --gold-pale:rgba(201,168,76,0.10);
+  --dark:#0a0c0f; --dark2:#0f1217; --dark3:#161a21; --dark4:#1c2028;
+  --surface:rgba(255,255,255,0.04); --surface2:rgba(255,255,255,0.07);
+  --border:rgba(201,168,76,0.18); --border-subtle:rgba(255,255,255,0.07);
+  --text:#f0ece4; --muted:rgba(240,236,228,0.48);
+  --green:#4caf7d; --green-pale:rgba(76,175,125,0.12);
+  --red:#e05c5c;   --red-pale:rgba(224,92,92,0.12);
+  --radius:16px; --radius-sm:10px;
+  --shadow:0 4px 24px rgba(0,0,0,0.35);
+}
+
+/* ── PAGE BODY ── */
+.transactions-page {
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: fadeUp .6s ease both .1s;
+}
+
+/* ── TOP TOOLBAR ── */
+.tx-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.tx-search-wrap {
+  flex: 1;
+  position: relative;
+  min-width: 200px;
+}
+.tx-search-icon {
+  position: absolute;
+  left: 14px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  pointer-events: none;
+}
+.tx-search {
+  width: 100%;
+  padding: 11px 14px 11px 40px;
+  background: var(--dark3);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 14px; color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  transition: border-color .2s, box-shadow .2s;
+  outline: none;
+}
+.tx-search:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,.1);
+}
+.tx-search::placeholder { color: rgba(240,236,228,.25); }
+
+.tx-month-select {
+  padding: 11px 16px;
+  background: var(--dark3);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 13px; color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  outline: none; cursor: pointer;
+  transition: border-color .2s;
+  appearance: none;
+  min-width: 160px;
+}
+.tx-month-select:focus { border-color: var(--gold); }
+.tx-month-select option { background: var(--dark3); }
+
+.tx-type-filter {
+  display: flex;
+  background: var(--dark4);
+  border-radius: var(--radius-sm);
+  padding: 4px; gap: 0;
+}
+.txf-btn {
+  padding: 8px 16px;
+  border: none; background: transparent;
+  font-size: 12px; font-weight: 500; color: var(--muted);
+  border-radius: 7px; cursor: pointer; transition: all .2s;
+  font-family: 'Outfit', sans-serif;
+}
+.txf-btn.active { background: var(--gold-pale); color: var(--gold-light); }
+
+/* ── MONTH GROUP ── */
+.month-group { display: flex; flex-direction: column; gap: 0; }
+.month-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 4px;
+}
+.month-header-left {
+  display: flex; align-items: center; gap: 12px;
+}
+.month-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 600; color: var(--text);
+}
+.month-count {
+  font-size: 11px; font-weight: 600; padding: 3px 10px;
+  border-radius: 99px; background: var(--surface2); color: var(--muted);
+}
+.month-summary {
+  display: flex; gap: 20px;
+}
+.ms-item { font-size: 12px; font-weight: 600; }
+.ms-item.inc { color: var(--green); }
+.ms-item.exp { color: var(--red); }
+
+/* ── TRANSACTION ROW ── */
+.tx-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 12px; border-radius: 11px;
+  cursor: default; transition: background .15s;
+}
+.tx-row:hover { background: var(--surface); }
+
+.tx-row-icon {
+  width: 42px; height: 42px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 19px; flex-shrink: 0;
+}
+.tx-row-icon.income  { background: var(--green-pale); }
+.tx-row-icon.expense { background: var(--red-pale); }
+
+.tx-row-body { flex: 1; min-width: 0; }
+.tx-row-desc {
+  font-size: 14px; font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tx-row-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.tx-row-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+.tx-row-amount {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px; font-weight: 600; min-width: 110px; text-align: right;
+}
+.tx-row-amount.income  { color: var(--green); }
+.tx-row-amount.expense { color: var(--red); }
+
+.tx-row-type-badge {
+  font-size: 10px; font-weight: 600; padding: 3px 10px;
+  border-radius: 99px; text-transform: uppercase; letter-spacing: .5px;
+  min-width: 72px; text-align: center;
+}
+.tx-row-type-badge.income  { background: var(--green-pale); color: var(--green); }
+.tx-row-type-badge.expense { background: var(--red-pale);   color: var(--red); }
+
+.tx-row-delete {
+  background: transparent; border: none; cursor: pointer;
+  font-size: 13px; color: var(--muted); padding: 6px 8px;
+  border-radius: 7px; transition: all .15s;
+}
+.tx-row-delete:hover { background: var(--red-pale); color: var(--red); }
+
+/* ── MONTHLY SUMMARY CARDS ── */
+.month-totals-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.mt-card {
+  background: var(--dark3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  transition: border-color .2s;
+}
+.mt-card:hover { border-color: var(--border); }
+.mt-icon { font-size: 22px; margin-bottom: 10px; }
+.mt-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; }
+.mt-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 600; margin-top: 4px;
+}
+.mt-value.inc { color: var(--green); }
+.mt-value.exp { color: var(--red); }
+.mt-value.bal { color: var(--gold-light); }
+
+/* ── EMPTY STATE ── */
+.tx-empty {
+  text-align: center; padding: 60px 0; color: var(--muted);
+}
+.tx-empty-icon { font-size: 42px; margin-bottom: 12px; }
+.tx-empty p { font-size: 14px; }
+
+/* ── CARD ── */
+.card {
+  background: var(--dark3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+}
+.card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 600; margin-bottom: 20px;
+}
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+@media (max-width: 768px) {
+  .transactions-page { padding: 20px; }
+  .month-totals-row { grid-template-columns: 1fr 1fr; }
+  .tx-toolbar { flex-direction: column; align-items: stretch; }
+}

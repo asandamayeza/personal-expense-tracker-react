@@ -1,61 +1,244 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Outfit:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-pale: rgba(201,168,76,0.12);
+  --dark: #0a0c0f;
+  --dark2: #111418;
+  --dark3: #181c22;
+  --surface: rgba(255,255,255,0.04);
+  --surface2: rgba(255,255,255,0.07);
+  --border: rgba(201,168,76,0.2);
+  --border-subtle: rgba(255,255,255,0.08);
+  --text: #f0ece4;
+  --muted: rgba(240,236,228,0.5);
+  --danger: #e05c5c;
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--dark);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── WELCOME LAYOUT ── */
+.welcome-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+/* ── LEFT PANEL — hero image ── */
+.welcome-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--dark2);
+}
+.welcome-hero-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+  transition: transform 12s ease;
+}
+.welcome-hero:hover .welcome-hero-img {
+  transform: scale(1.04);
+}
+.welcome-hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(10,12,15,0.7) 0%, rgba(10,12,15,0.2) 60%, rgba(201,168,76,0.08) 100%);
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding: 52px 48px;
+}
+.hero-brand {
+  display: flex; align-items: center; gap: 12px;
+  position: absolute; top: 40px; left: 48px;
+}
+.hero-brand-icon {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.hero-brand-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold-light);
+}
+.hero-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px; font-weight: 300; line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 16px;
+  animation: fadeUp 0.9s ease both 0.2s;
+}
+.hero-tagline strong { color: var(--gold-light); font-weight: 600; }
+.hero-sub {
+  font-size: 14px; color: var(--muted); line-height: 1.7;
+  max-width: 340px;
+  animation: fadeUp 0.9s ease both 0.4s;
+}
+.hero-stat-row {
+  display: flex; gap: 32px; margin-top: 36px;
+  animation: fadeUp 0.9s ease both 0.55s;
+}
+.hero-stat .hs-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-weight: 600; color: var(--gold-light);
+}
+.hero-stat .hs-label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--muted); margin-top: 2px;
+}
+
+/* ── RIGHT PANEL — form ── */
+.welcome-form-panel {
+  background: var(--dark2);
+  display: flex; align-items: center; justify-content: center;
+  padding: 60px 52px;
+  position: relative;
+  animation: fadeIn 0.7s ease both;
+}
+.welcome-form-panel::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.4;
+}
 
 .welcome {
-    font-family: "Changa One";
-    font-weight: normal;
-    font-size: 15px;
-    text-align: center;
-    margin-top: 2px;
-  }
- 
-  .login-register-container {
-    width: 500px;
-    height: 470px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .login-register-container input {
-    width: 90%;
-    padding: 10px;
-    margin-top: 50px;
-    margin-bottom: 2px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .sign-in-register-button {
-    width: 90%;
-    margin-top: 50px;
-    padding: 10px;
-    background-color: #1300e9;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .sign-in-register-button:hover {
-    background-color: #0b0fe9;
-  }
-  
-  .create-account-button {
-    margin-top: 20px;
-    font-size: 14px;
-  }
-.google-button-container {
-    background-color: #ffffff;
-    color: #0b0fe9;
-    padding: 10px;
-    width: 30% !important;
-    margin-top: 30px !important;
-    margin-left: 120px;
-    
- 
-    
-  }
-  
+  width: 100%; max-width: 420px;
+  font-family: 'Outfit', sans-serif;
+}
+.welcome-header { margin-bottom: 40px; }
+.welcome-greeting {
+  font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--gold); font-weight: 500; margin-bottom: 10px;
+}
+.welcome-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px; font-weight: 600; line-height: 1.1;
+  color: var(--text);
+}
+.welcome-subtitle { font-size: 14px; color: var(--muted); margin-top: 8px; }
 
- 
+/* ── TABS ── */
+.auth-tabs {
+  display: flex; gap: 0;
+  background: var(--dark3);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  margin-bottom: 32px;
+}
+.auth-tab {
+  flex: 1; padding: 10px;
+  background: transparent; border: none; cursor: pointer;
+  font-size: 13px; font-weight: 500; color: var(--muted);
+  border-radius: 6px; transition: all 0.2s;
+  font-family: 'Outfit', sans-serif;
+}
+.auth-tab.active {
+  background: var(--surface2);
+  color: var(--gold-light);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+}
+
+/* ── FORM ELEMENTS ── */
+.login-register-container {
+  display: flex; flex-direction: column; gap: 14px;
+}
+.input-group { display: flex; flex-direction: column; gap: 6px; }
+.input-group label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--muted);
+}
+.login-register-container input {
+  width: 100%;
+  padding: 13px 16px;
+  background: var(--surface);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  margin: 0;
+}
+.login-register-container input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+}
+.login-register-container input::placeholder { color: rgba(240,236,228,0.25); }
+
+.forgot-link {
+  font-size: 12px; color: var(--gold); text-align: right;
+  cursor: pointer; margin-top: -6px;
+  transition: opacity 0.2s;
+}
+.forgot-link:hover { opacity: 0.7; }
+
+/* ── BUTTONS ── */
+.sign-in-register-button {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, var(--gold), #a67c2e);
+  color: #0a0c0f;
+  border: none; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 700;
+  cursor: pointer; margin-top: 8px;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.sign-in-register-button:hover { opacity: 0.88; transform: translateY(-1px); }
+.sign-in-register-button:active { transform: translateY(0); }
+
+.divider {
+  display: flex; align-items: center; gap: 12px;
+  color: var(--muted); font-size: 12px; margin: 8px 0;
+}
+.divider::before, .divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border-subtle);
+}
+
+.google-button-container {
+  width: 100% !important; margin: 0 !important;
+}
+.google-button-container > div {
+  width: 100% !important; border-radius: var(--radius-sm) !important;
+  background: var(--surface) !important;
+  border: 1.5px solid var(--border-subtle) !important;
+  box-shadow: none !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 13px !important;
+}
+
+.create-account-button {
+  text-align: center; font-size: 13px; color: var(--muted);
+  margin-top: 8px; cursor: pointer;
+}
+.create-account-button a, .create-account-button span {
+  color: var(--gold); font-weight: 500; text-decoration: none;
+}
+.create-account-button a:hover { text-decoration: underline; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp  { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .welcome-page { grid-template-columns: 1fr; }
+  .welcome-hero { display: none; }
+  .welcome-form-panel { padding: 48px 24px; }
+}
